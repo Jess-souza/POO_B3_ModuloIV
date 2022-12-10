@@ -2,6 +2,7 @@ package stream;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -21,13 +22,17 @@ public class MainExercicioStream {
         contatoList.add(julia);
         contatoList.add(jessica);
 
+        //Some todas as idades
+        System.out.println("Soma todas idades:");
         Stream<Contato> contatoStream = contatoList.stream();
-
         Long totalIdades = contatoStream
                 .map(contato -> contato.getIdade())
                 .reduce(0l, (subtotal, valor) -> subtotal + valor);
         System.out.println("Total de idades: " + totalIdades);
+        System.out.println("\n _____________________________ \n");
 
+        //Filtre por data de nascimento
+        System.out.println("Filtra por data de nascimento:");
         Stream<Contato> nascimentoStream = contatoList.stream();
         nascimentoStream
                 .filter(contato ->
@@ -37,8 +42,10 @@ public class MainExercicioStream {
                 ).forEach(System.out::println);
         // contatoStream.forEach(contato ->{
         //   System.out.println("Nome: " +contato.getNome());});
+        System.out.println("\n _____________________________ \n");
 
-
+        //Pesquise por nome ou id
+        System.out.println("Pesquisa por nome ou Id:");
         Stream<Contato> nomeIdStream = contatoList.stream();
         nomeIdStream
                 .filter(contato -> {
@@ -46,6 +53,28 @@ public class MainExercicioStream {
                     boolean isId = contato.getId().equals(3);
                     return isNome || isId;
                 }).forEach(System.out::println);
+        System.out.println("\n _____________________________ \n");
+
+        //Ordene por nome
+        System.out.println("Ordena por nome:");
+        Stream<Contato> ordemCrescenteStream = contatoList.stream();
+        ordemCrescenteStream
+                .sorted(Comparator.comparing(Contato::getNome))
+                .forEach(System.out::println);
+        System.out.println("\n _____________________________ \n");
+
+        //Mostre a pessoa mais velha e mais nova
+        System.out.println("Mostre a pessoa mais velha e mais nova:");
+        Stream<Contato> maisVelhaStream = contatoList.stream();
+        var value2  = maisVelhaStream.max(Comparator.comparing(Contato::getIdade));
+        if (value2.isPresent()) {
+            System.out.println("Pessoa mais velha: " + value2.get().toString());
+        }
+        Stream<Contato> maisNovaStream = contatoList.stream();
+        var value = maisNovaStream.min(Comparator.comparing(Contato::getIdade));
+        if (value.isPresent()) {
+            System.out.println("Pessoa mais nova: " + value.get().toString());
+        }
     }
 }
 
